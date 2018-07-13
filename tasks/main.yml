@@ -1,0 +1,27 @@
+- name: Get awx repo
+  git: 
+    accept_hostkey: true
+    dest: "/root/awx"
+    repo: "https://github.com/ansible/awx.git"
+    version: "{{ awx_version }}"
+    force: true
+
+- name: Install additional software
+  package: 
+    name: 
+      - "make"
+      - "nodejs"
+      - "npm"
+    state: present
+
+- name: Load inventory file
+  template: 
+    src: "inventory.j2"
+    dest: "/root/awx/installer/inventory"
+    backup: true
+
+- name: Run the awx installer
+  command: "ansible-playbook -i inventory install.yml"
+  args:
+    chdir: "/root/awx/installer"
+
