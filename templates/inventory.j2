@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+## {{ ansible_managed }}
 localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env python"
 
 [all:vars]
@@ -58,9 +58,10 @@ docker_compose_dir=/var/lib/awx
 
 # Set pg_hostname if you have an external postgres server, otherwise
 # a new postgres service will be created
-# pg_hostname=postgresql
+{% if awx_postgresql_server is not defined %}# pg_hostname=postgresql{% else %}pg_hostname={{ awx_postgresql_server }}{% endif %}
+
 pg_username=awx
-pg_password={{ lookup('password', inventory_dir + '/credentials/' + ansible_fqdn + '/awx_postgresql_password length=64') }}
+pg_password={{ lookup('password', inventory_dir + '/credentials/awx_postgre_pwd/awx_postgresql_password length=64') }}
 pg_database=awx
 pg_port=5432
 
